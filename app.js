@@ -16,52 +16,77 @@ Mongoose.connect("mongodb+srv://amruthabinu:amruthabinu2002@cluster0.bwn2sfy.mon
 
 
 // create a post
-app.post("/create",async(req,res)=>{
+app.post("/create", async (req, res) => {
     // read input
-    let input=req.body 
+    let input = req.body
 
     // token via headers
-    let token= req.headers.token
+    let token = req.headers.token
 
     // verify token for insert value
-    Jwt.verify(token,"blogApp",async(error,decoded)=>{
-        if (decoded && decoded.email){
+    Jwt.verify(token, "blogApp", async (error, decoded) => {
+        if (decoded && decoded.email) {
 
-            let result= new postModel(input)
+            let result = new postModel(input)
             await result.save()
-             res.json({"status":"success"})
+            res.json({ "status": "success" })
         }
-        else{
-            res.json({"status":"Invalid Authentication"})
+        else {
+            res.json({ "status": "Invalid Authentication" })
         }
     })
 
 })
 
 // Viewall posts
-app.post("/viewall",(req,res)=>{
-    let token= req.headers.token
+app.post("/viewall", (req, res) => {
+    let token = req.headers.token
 
-    Jwt.verify(token,"blogApp",(error,decoded)=>{
-        if (decoded && decoded.email){
+    Jwt.verify(token, "blogApp", (error, decoded) => {
+        if (decoded && decoded.email) {
 
             postModel.find().then(
-                (items)=>{
+                (items) => {
                     res.json(items)
                 }
             ).catch(
-                (error)=>{
-                    res.json({"status":"error"})
+                (error) => {
+                    res.json({ "status": "error" })
                 }
             )
 
-        }else{
+        } else {
 
-            res.json({"status":"Invalid authentication"})
+            res.json({ "status": "Invalid authentication" })
         }
     })
 })
 
+
+// View My posts
+app.post("/viewMyPost", (req, res) => {
+    let input= req.body
+    let token = req.headers.token
+
+    Jwt.verify(token, "blogApp", (error, decoded) => {
+        if (decoded && decoded.email) {
+
+            postModel.find(input).then(
+                (items) => {
+                    res.json(items)
+                }
+            ).catch(
+                (error) => {
+                    res.json({ "status": "error" })
+                }
+            )
+
+        } else {
+
+            res.json({ "status": "Invalid authentication" })
+        }
+    })
+})
 
 
 
@@ -123,12 +148,10 @@ app.post("/signup", async (req, res) => {
 
     userModel.find({ email: req.body.email }).then(
         (items) => {
-            if (items.length > 0) 
-            {
+            if (items.length > 0) {
                 res.json({ "status": "email id already exist" })
             }
-            else 
-            {
+            else {
                 let result = new userModel(input)
                 result.save()
                 res.json({ "status": "success" })
