@@ -13,6 +13,9 @@ app.use(Cors())
 
 Mongoose.connect("mongodb+srv://amruthabinu:amruthabinu2002@cluster0.bwn2sfy.mongodb.net/blogDb?retryWrites=true&w=majority&appName=Cluster0")
 
+
+
+// SignUp
 app.post("/signup", async (req, res) => {
 
     let input = req.body
