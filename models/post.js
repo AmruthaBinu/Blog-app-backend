@@ -10,7 +10,10 @@ const postSchema=Mongoose.Schema(
 
         Messege:String,
 
-        PostedData:Date
+        PostedData:{
+            type:Date,
+            default:Date.now
+        }
 
 
     }
